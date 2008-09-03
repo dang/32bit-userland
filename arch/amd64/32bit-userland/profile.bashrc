@@ -1,0 +1,2 @@
+
+#export PYTHONHOME=/usr/dang
