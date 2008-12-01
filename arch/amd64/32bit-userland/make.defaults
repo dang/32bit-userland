@@ -12,8 +12,9 @@ PROFILE_ARCH="amd64"
 # We need sparc64 binutils for linux-headers
 CTARGETS_BINUTILS="i686-pc-linux-gnu x86_64-pc-linux-gnu"
 
-# Multilib stuff
-MULTILIB_ABIS="x86"
+# Multilib stuff with symlink
+MULTILIB_ABIS="x86 amd64"
 DEFAULT_ABI="x86"
 ABI="${DEFAULT_ABI}"
-
+SYMLINK_LIB="yes"
+LIBDIR_x86="lib32"
