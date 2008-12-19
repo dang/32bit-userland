@@ -1,0 +1,5 @@
+glib - Detects based on compiler; used sed in configure
+libgcrypt - Detects based on compiler; used sed in mpi/config.links
+
+
+glibc (?) - kernel doesn't build
