@@ -59,7 +59,7 @@ src_unpack() {
 	if [[ -n ${PATCHVER} ]] ; then
 		EPATCH_SUFFIX="patch"
 		epatch "${WORKDIR}"/patch
-		epatch "${FILESDIR}"/${P}-ext4extants.patch
+		epatch "${FILESDIR}"/${P}-ext4extents.patch
 		eautoreconf
 	fi
 }
