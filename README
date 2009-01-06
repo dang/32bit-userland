@@ -1,0 +1,25 @@
+Run Gentoo amd64?  Interested in a 32bit userland for it?  Willing to deal
+with failures and fix them?  This is for you!
+
+This is an overlay and a profile for 32bit userland on 64bit Gentoo.  It's hard to use.
+
+First, the profile needs to be copied over portage after every sync; for some
+reason, profiles in overlays don't work.
+
+Second, you need a proper state to bootstrap from.  Normal 64bit didn't work
+when I tried it (although sparc has since done this; I intend to find out how,
+when I get a chance).  I haven't yet put my stage up, but it can be made with
+catalyst and some experimentation.
+
+Third, you need this overlay, plus some other workarounds (which will make it
+into the overlay over time).
+
+Fourth, you need a full 64bit chroot for making binpkgs of certain things that
+must be multlib (such as gcc, glibc, and sandbox) and for building your kernel
+(the kernel build system is too smart for it's own good).
+
+Fifth, you need a willingness to deal with frustration. :P
+
+That said, this *does* work and I *am* running it on several real systems and
+number of VMs.  Good luck, and let me know (dang@gentoo.org) if you use it, or
+have suggestions.
