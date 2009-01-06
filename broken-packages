@@ -1,6 +1,6 @@
 glib - Detects based on compiler; used sed in configure
 libgcrypt - Detects based on compiler; used sed in mpi/config.links
-mesa - add --enable-32-bit
+mesa - add --enable-32-bit (added to overlay)
 liboil - patched
 gdb - broken readline (disabled) build 64 (configure.host) patched
 xulrunner - patched
