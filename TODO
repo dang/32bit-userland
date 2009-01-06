@@ -2,10 +2,8 @@ Packages to add to overlay:
 
 glib
 libgcrypt
-liboil
 gdb
 xulrunner
-libtheora
 
 Packages currently needing 64bit:
 sandbox
