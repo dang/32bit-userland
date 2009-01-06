@@ -3,7 +3,6 @@ Packages to add to overlay:
 glib
 libgcrypt
 gdb
-xulrunner
 
 Packages currently needing 64bit:
 sandbox
