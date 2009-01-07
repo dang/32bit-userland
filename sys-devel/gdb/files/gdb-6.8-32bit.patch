@@ -1,0 +1,51 @@
+diff --exclude-from=/home/dang/.scripts/diffrc -up -ruN gdb-6.8.orig/configure.ac gdb-6.8/configure.ac
+--- gdb-6.8.orig/configure.ac	2008-03-27 14:27:19.000000000 -0400
++++ gdb-6.8/configure.ac	2008-12-20 16:31:29.000000000 -0500
+@@ -155,7 +155,7 @@ build_tools="build-texinfo build-byacc b
+ 
+ # these libraries are used by various programs built for the host environment
+ #
+-host_libs="intl mmalloc libiberty opcodes bfd readline tcl tk itcl libgui zlib libcpp libdecnumber gmp mpfr"
++host_libs="intl mmalloc libiberty opcodes bfd tcl tk itcl libgui zlib libcpp libdecnumber gmp mpfr"
+ 
+ # these tools are built for the host environment
+ # Note, the powerpc-eabi build depends on sim occurring before gdb in order to
+diff --exclude-from=/home/dang/.scripts/diffrc -up -ruN gdb-6.8.orig/gdb/configure.host gdb-6.8/gdb/configure.host
+--- gdb-6.8.orig/gdb/configure.host	2008-01-19 10:03:50.000000000 -0500
++++ gdb-6.8/gdb/configure.host	2008-12-20 19:21:47.000000000 -0500
+@@ -163,7 +163,7 @@ vax-*-netbsd*)		gdb_host=nbsdaout ;;
+ vax-*-openbsd*)		gdb_host=obsd ;;
+ vax-*-ultrix*)		gdb_host=vax ;;
+ 
+-x86_64-*-linux*)	gdb_host=linux64 ;;
++x86_64-*-linux*)	gdb_host=linux ;;
+ x86_64-*-freebsd* | x86_64-*-kfreebsd*-gnu)
+ 			gdb_host=fbsd64 ;;
+ x86_64-*-netbsd* | x86_64-*-knetbsd*-gnu)
+diff --exclude-from=/home/dang/.scripts/diffrc -up -ruN gdb-6.8.orig/gdb/gdbserver/configure.srv gdb-6.8/gdb/gdbserver/configure.srv
+--- gdb-6.8.orig/gdb/gdbserver/configure.srv	2008-02-11 17:00:31.000000000 -0500
++++ gdb-6.8/gdb/gdbserver/configure.srv	2008-12-20 19:40:23.000000000 -0500
+@@ -160,8 +160,9 @@ case "${target}" in
+   spu*-*-*)		srv_regobj=reg-spu.o
+ 			srv_tgtobj="spu-low.o"
+ 			;;
+-  x86_64-*-linux*)	srv_regobj=reg-x86-64-linux.o
+-			srv_tgtobj="linux-low.o linux-x86-64-low.o i387-fp.o"
++  x86_64-*-linux*)	srv_regobj=reg-i386-linux.o
++			srv_tgtobj="linux-low.o linux-i386-low.o i387-fp.o"
++			srv_linux_usrregs=yes
+ 			srv_linux_regsets=yes
+ 			srv_linux_thread_db=yes
+ 			;;
+diff --exclude-from=/home/dang/.scripts/diffrc -up -ruN gdb-6.8.orig/configure gdb-6.8/configure
+--- gdb-6.8.orig/configure	2008-02-20 09:26:58.000000000 -0500
++++ gdb-6.8/configure	2008-12-20 16:31:29.000000000 -0500
+@@ -1845,7 +1845,7 @@ build_tools="build-texinfo build-byacc b
+ 
+ # these libraries are used by various programs built for the host environment
+ #
+-host_libs="intl mmalloc libiberty opcodes bfd readline tcl tk itcl libgui zlib libcpp libdecnumber gmp mpfr"
++host_libs="intl mmalloc libiberty opcodes bfd tcl tk itcl libgui zlib libcpp libdecnumber gmp mpfr"
+ 
+ # these tools are built for the host environment
+ # Note, the powerpc-eabi build depends on sim occurring before gdb in order to

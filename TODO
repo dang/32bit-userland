@@ -2,7 +2,6 @@ Packages to add to overlay:
 
 glib
 libgcrypt
-gdb
 
 Packages currently needing 64bit:
 sandbox
