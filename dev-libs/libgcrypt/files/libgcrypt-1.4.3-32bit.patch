@@ -1,0 +1,12 @@
+diff --exclude-from=/home/dang/.scripts/diffrc -up -ruN libgcrypt-1.4.3.orig/mpi/config.links libgcrypt-1.4.3/mpi/config.links
+--- libgcrypt-1.4.3.orig/mpi/config.links	2008-08-19 11:20:03.000000000 -0400
++++ libgcrypt-1.4.3/mpi/config.links	2009-01-06 21:44:27.148083416 -0500
+@@ -115,7 +115,7 @@ case "${host}" in
+     x86_64-*-*)
+ 	echo '#define ELF_SYNTAX' >>./mpi/asm-syntax.h
+ 	cat  $srcdir/mpi/i386/syntax.h	    >>./mpi/asm-syntax.h
+-	path="amd64"
++	path="i586 i386"
+ 	;;
+     alpha*-*-*)
+ 	echo '/* configured for alpha */' >>./mpi/asm-syntax.h
