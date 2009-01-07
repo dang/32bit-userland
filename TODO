@@ -1,6 +1,5 @@
 Packages to add to overlay:
 
-glib
 libgcrypt
 
 Packages currently needing 64bit:
