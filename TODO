@@ -1,6 +1,6 @@
 Packages to add to overlay:
 
-libgcrypt
+<none>
 
 Packages currently needing 64bit:
 sandbox
