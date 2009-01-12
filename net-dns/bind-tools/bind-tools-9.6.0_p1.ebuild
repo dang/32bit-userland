@@ -5,7 +5,8 @@
 inherit flag-o-matic eutils autotools
 
 MY_PN=${PN//-tools}
-MY_P="${MY_PN}-${PV}"
+MY_PV=${PV/_p1/-P1}
+MY_P="${MY_PN}-${MY_PV}"
 S="${WORKDIR}/${MY_P}"
 DESCRIPTION="bind tools: dig, nslookup, host, nsupdate, dnssec-keygen"
 HOMEPAGE="http://www.isc.org/products/BIND/bind9.html"
@@ -39,7 +40,7 @@ src_unpack() {
 		's:struct isc_socket {:#undef SO_BSDCOMPAT\n\nstruct isc_socket {:' \
 		-i lib/isc/unix/socket.c
 
-	epatch "${FILESDIR}"/${P}-32bit-userland.patch
+	epatch "${FILESDIR}"/${PN}-9.6.0-32bit-userland.patch
 	eautoreconf
 }
 
