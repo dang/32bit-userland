@@ -1,0 +1,14 @@
+diff --exclude-from=/home/dang/.scripts/diffrc -up -ruN strace-4.5.18.orig/configure.ac strace-4.5.18/configure.ac
+--- strace-4.5.18.orig/configure.ac	2008-08-28 17:15:56.000000000 -0400
++++ strace-4.5.18/configure.ac	2009-01-16 14:37:04.388064521 -0500
+@@ -100,8 +100,8 @@ sh*)
+ 	AC_DEFINE([SH], 1, [Define for the SH architecture.])
+ 	;;
+ x86?64*)
+-	arch=x86_64
+-	AC_DEFINE([X86_64], 1, [Define for the AMD x86-64 architecture.])
++	arch=i386
++	AC_DEFINE([I386], 1, [Define for the i386 architecture.])
+ 	;;
+ *)
+ 	AC_MSG_RESULT([NO!])
