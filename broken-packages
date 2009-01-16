@@ -12,3 +12,6 @@ bind-tools - patched (overlay)
 
 
 glibc (?) - kernel doesn't build
+
+
+git 1.6.1 (link failure.  USE flags?)
