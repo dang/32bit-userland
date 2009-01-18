@@ -1,0 +1,110 @@
+diff --exclude-from=/home/dang/.scripts/diffrc -up -ruN mplayer-1.0_rc2_p28288.orig/configure mplayer-1.0_rc2_p28288/configure
+--- mplayer-1.0_rc2_p28288.orig/configure	2009-01-10 06:16:18.000000000 -0500
++++ mplayer-1.0_rc2_p28288/configure	2009-01-18 11:58:52.276653828 -0500
+@@ -1687,7 +1687,7 @@ fi
+ 
+ _arch_all='X86 X86_32 X86_64 IA64 SPARC ARM SH PPC ALPHA SGI_MIPS PA_RISC S390 S390X VAX BFIN XTENSA GENERIC'
+ case "$host_arch" in
+-  i[3-9]86|x86|x86pc|k5|k6|k6-2|k6-3|pentium*|athlon*|i586-i686)
++  i[3-9]86|x86|x86pc|k5|k6|k6-2|k6-3|pentium*|athlon*|i586-i686|x86_64|amd64)
+   _arch='X86 X86_32'
+   _target_arch_x86="ARCH_X86 = yes"
+   _target_arch="ARCH_X86_32 = yes"
+@@ -1927,89 +1927,6 @@ EOF
+     iproc='ia64'
+     ;;
+ 
+-  x86_64|amd64)
+-    _arch='X86 X86_64'
+-    _target_arch='ARCH_X86_64 = yes'
+-    _target_arch_x86="ARCH_X86 = yes"
+-    _def_fast_unaligned='#define HAVE_FAST_UNALIGNED 1'
+-    def_fast_64bit='#define HAVE_FAST_64BIT 1'
+-    iproc='x86_64'
+-
+-    # gcc >= 3.4.0  doesn't support -mcpu, we have to use -mtune instead
+-    if test "$cc_vendor" = "gnu" && test "$_cc_major" -gt 3 -o "$_cc_major" -eq 3 -a "$_cc_minor" -ge 4 ; then
+-	cpuopt=-mtune
+-    else
+-	cpuopt=-mcpu
+-    fi
+-    test $_fast_cmov = "auto" && _fast_cmov=yes
+-    if test "$_runtime_cpudetection" = no ; then
+-      case "$pvendor" in
+-      AuthenticAMD)
+-        proc=k8;;
+-      GenuineIntel)
+-        case "$pfamily" in
+-        6) proc=core2;;
+-        *)
+-          # 64-bit prescotts exist, but as far as GCC is concerned they
+-          # have the same capabilities as a nocona.
+-          proc=nocona
+-          ;;
+-        esac
+-        ;;
+-      *)
+-        proc=error;;
+-      esac
+-    fi # test "$_runtime_cpudetection" = no
+-
+-    echocheck "GCC & CPU optimization abilities"
+-cat > $TMPC << EOF
+-int main(void) { return 0; }
+-EOF
+-    # This is a stripped-down version of the i386 fallback.
+-    if test "$_runtime_cpudetection" = no ; then
+-      cc_check -march=native && proc=native
+-      # --- AMD processors ---
+-      if test "$proc" = "k8"; then
+-        cc_check -march=$proc $cpuopt=$proc || proc=athlon-xp
+-      fi
+-      # This will fail if gcc version < 3.3, which is ok because earlier
+-      # versions don't really support 64-bit on amd64.
+-      # Is this a valid assumption? -Corey
+-      if test "$proc" = "athlon-xp"; then
+-        cc_check -march=$proc $cpuopt=$proc || proc=error
+-      fi
+-      # --- Intel processors ---
+-      if test "$proc" = "core2"; then
+-        cc_check -march=$proc $cpuopt=$proc || proc=nocona
+-      fi
+-      if test "$proc" = "nocona"; then
+-        cc_check -march=$proc $cpuopt=$proc || proc=pentium4
+-      fi
+-      if test "$proc" = "pentium4"; then
+-        cc_check -march=$proc $cpuopt=$proc || proc=error
+-      fi
+-
+-      _march="-march=$proc"
+-      _mcpu="$cpuopt=$proc"
+-      if test "$proc" = "error" ; then
+-        echores "CPU optimization disabled. CPU not recognized or your compiler is too old."
+-        _mcpu=""
+-        _march=""
+-      fi
+-    else # if test "$_runtime_cpudetection" = no
+-      # x86-64 is an undocumented option, an intersection of k8 and nocona.
+-      _march="-march=x86-64"
+-      _mcpu="$cpuopt=generic"
+-      cc_check $_mcpu || _mcpu="x86-64"
+-      cc_check $_mcpu || _mcpu=""
+-      cc_check $_march $_mcpu || _march=""
+-    fi
+-
+-    _optimizing=""
+-
+-    echores "$proc"
+-    ;;
+-
+   sparc|sparc64)
+     _arch='SPARC'
+     _target_arch='ARCH_SPARC = yes'
+@@ -2443,7 +2360,6 @@ if test -z "$YASMFLAGS" ; then
+   fi
+   # currently tested for Linux x86, x86_64
+   YASMFLAGS="-f $objformat"
+-  x86_64 && YASMFLAGS="$YASMFLAGS -DARCH_X86_64 -m amd64"
+   case "$objformat" in
+     elf) test $_debug && YASMFLAGS="$YASMFLAGS -g dwarf2" ;;
+     macho64)             YASMFLAGS="$YASMFLAGS -DPIC -DPREFIX" ;;
