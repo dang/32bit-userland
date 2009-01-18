@@ -1,0 +1,11 @@
+diff --exclude-from=/home/dang/.scripts/diffrc -up -ruN gegl-0.0.22.orig/configure.ac gegl-0.0.22/configure.ac
+--- gegl-0.0.22.orig/configure.ac	2008-12-31 11:11:03.000000000 -0500
++++ gegl-0.0.22/configure.ac	2009-01-18 17:12:07.812023809 -0500
+@@ -244,7 +244,6 @@ case "$target_or_host" in
+   x86_64-*-*)
+     have_x86=yes
+     AC_DEFINE(ARCH_X86, 1, [Define to 1 if you are compiling for ix86.])
+-    AC_DEFINE(ARCH_X86_64, 1, [Define to 1 if you are compiling for amd64.])
+     ;;
+   ppc-*-* | powerpc-*)
+     have_ppc=yes
