@@ -1,0 +1,11 @@
+diff --exclude-from=/home/dang/.scripts/diffrc -up -ruN gimp-2.6.4.orig/configure.in gimp-2.6.4/configure.in
+--- gimp-2.6.4.orig/configure.in	2008-11-21 14:55:44.000000000 -0500
++++ gimp-2.6.4/configure.in	2009-01-18 17:21:12.672074544 -0500
+@@ -185,7 +185,6 @@ case "$target_or_host" in
+   x86_64-*-*)
+     have_x86=yes
+     AC_DEFINE(ARCH_X86, 1, [Define to 1 if you are compiling for ix86.])
+-    AC_DEFINE(ARCH_X86_64, 1, [Define to 1 if you are compiling for amd64.])
+     ;;
+   ppc-*-* | powerpc-*)
+     have_ppc=yes
