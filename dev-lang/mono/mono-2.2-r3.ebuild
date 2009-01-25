@@ -40,6 +40,7 @@ PATCHES=(
 	"${FILESDIR}/mono-2.2-ppc-threading.patch"
 	"${FILESDIR}/mono-2.2-uselibdir.patch"
 	"${FILESDIR}/mono-2.2-r121596-work-around-runtime-crash.patch"
+	"${FILESDIR}/mono-2.2-r123987-bless-crash.patch"
 	"${FILESDIR}/${PN}-2.0.1-32bit.patch"
 )
 
