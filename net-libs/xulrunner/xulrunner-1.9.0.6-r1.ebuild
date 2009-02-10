@@ -1,11 +1,11 @@
-# Copyright 1999-2008 Gentoo Foundation
+# Copyright 1999-2009 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/net-libs/xulrunner/xulrunner-1.9.0.5.ebuild,v 1.9 2008/12/26 19:07:10 jer Exp $
+# $Header: /var/cvsroot/gentoo-x86/net-libs/xulrunner/xulrunner-1.9.0.6-r1.ebuild,v 1.1 2009/02/05 19:50:32 serkan Exp $
 
 WANT_AUTOCONF="2.1"
 
 inherit flag-o-matic toolchain-funcs eutils mozconfig-3 makeedit multilib java-pkg-opt-2 python autotools
-PATCH="${P}-patches-0.1"
+PATCH="${PN}-1.9.0.5-patches-0.1"
 
 DESCRIPTION="Mozilla runtime package that can be used to bootstrap XUL+XPCOM applications"
 HOMEPAGE="http://developer.mozilla.org/en/docs/XULRunner"
@@ -14,15 +14,15 @@ SRC_URI="mirror://gentoo/${P}.tar.bz2
 	mirror://gentoo/${PATCH}.tar.bz2
 	http://dev.gentoo.org/~armin76/dist/${PATCH}.tar.bz2"
 
-KEYWORDS="alpha amd64 arm hppa ia64 ~ppc ~ppc64 -sparc x86"
+KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~ppc ~ppc64 -sparc ~x86"
 SLOT="1.9"
 LICENSE="|| ( MPL-1.1 GPL-2 LGPL-2.1 )"
 IUSE=""
 
 RDEPEND="java? ( >=virtual/jre-1.4 )
 	>=sys-devel/binutils-2.16.1
-	>=dev-libs/nss-3.12
-	>=dev-libs/nspr-4.7.1
+	>=dev-libs/nss-3.12.2
+	>=dev-libs/nspr-4.7.3
 	>=app-text/hunspell-1.1.9
 	>=media-libs/lcms-1.17"
 
@@ -62,7 +62,7 @@ src_unpack() {
 	EPATCH_SUFFIX="patch" \
 	EPATCH_FORCE="yes" \
 	epatch "${WORKDIR}"/patch
-	epatch "${FILESDIR}"/${P}-32bit.patch
+	epatch "${FILESDIR}"/${PN}-1.9.0.5-32bit.patch
 
 	eautoreconf || die "failed  running eautoreconf"
 
@@ -87,7 +87,7 @@ src_compile() {
 #		MEXTENSIONS="${MEXTENSIONS},python/xpcom"
 #	fi
 
-	# It doesn't compile on alpha without this LDFLAGS 
+	# It doesn't compile on alpha without this LDFLAGS
 	use alpha && append-ldflags "-Wl,--no-relax"
 
 	mozconfig_annotate '' --enable-extensions="${MEXTENSIONS}"
@@ -122,6 +122,10 @@ src_compile() {
 
 	# Finalize and report settings
 	mozconfig_final
+
+	if [[ $(gcc-major-version) -lt 4 ]]; then
+		append-cxxflags -fno-stack-protector
+	fi
 
 	####################################
 	#
@@ -158,8 +162,8 @@ src_install() {
 		>> "${D}"${MOZILLA_FIVE_HOME}/defaults/pref/vendor.js
 
 	if use java ; then
-	    java-pkg_dojar "${D}"${MOZILLA_FIVE_HOME}/javaxpcom.jar
-	    rm -f "${D}"${MOZILLA_FIVE_HOME}/javaxpcom.jar
+	    java-pkg_regjar "${D}"${MOZILLA_FIVE_HOME}/javaxpcom.jar
+	    java-pkg_regjar "${D}"${MOZILLA_FIVE_HOME}/sdk/lib/MozillaGlue.jar
+	    java-pkg_regjar "${D}"${MOZILLA_FIVE_HOME}/sdk/lib/MozillaInterfaces.jar
 	fi
 }
-
