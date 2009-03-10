@@ -1,6 +1,6 @@
 # Copyright 1999-2009 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/net-libs/xulrunner/xulrunner-1.9.0.6.ebuild,v 1.1 2009/02/04 11:30:10 armin76 Exp $
+# $Header: /var/cvsroot/gentoo-x86/net-libs/xulrunner/xulrunner-1.9.0.6-r1.ebuild,v 1.1 2009/02/05 19:50:32 serkan Exp $
 
 WANT_AUTOCONF="2.1"
 
@@ -162,7 +162,8 @@ src_install() {
 		>> "${D}"${MOZILLA_FIVE_HOME}/defaults/pref/vendor.js
 
 	if use java ; then
-	    java-pkg_dojar "${D}"${MOZILLA_FIVE_HOME}/javaxpcom.jar
-	    rm -f "${D}"${MOZILLA_FIVE_HOME}/javaxpcom.jar
+	    java-pkg_regjar "${D}"${MOZILLA_FIVE_HOME}/javaxpcom.jar
+	    java-pkg_regjar "${D}"${MOZILLA_FIVE_HOME}/sdk/lib/MozillaGlue.jar
+	    java-pkg_regjar "${D}"${MOZILLA_FIVE_HOME}/sdk/lib/MozillaInterfaces.jar
 	fi
 }
