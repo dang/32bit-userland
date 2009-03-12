@@ -1,0 +1,60 @@
+diff --exclude-from=/home/dang/.scripts/diffrc -up -ruN mkvtoolnix-2.5.3.orig/ac/ax_boost_base.m4 mkvtoolnix-2.5.3/ac/ax_boost_base.m4
+--- mkvtoolnix-2.5.3.orig/ac/ax_boost_base.m4	2009-03-07 05:31:57.000000000 -0500
++++ mkvtoolnix-2.5.3/ac/ax_boost_base.m4	2009-03-10 19:37:18.000000000 -0400
+@@ -87,7 +87,7 @@ AC_DEFUN([AX_BOOST_BASE],
+     dnl or if you install boost with RPM
+     if test "$ac_boost_path" != ""; then
+         case $target in
+-             powerpc64*|ppc64*|sparc64*|x86_64*) BOOST_LDFLAGS="-L$ac_boost_path/lib64" ;;
++             powerpc64*|ppc64*|sparc64*) BOOST_LDFLAGS="-L$ac_boost_path/lib64" ;;
+              *)                       BOOST_LDFLAGS="-L$ac_boost_path/lib" ;;
+         esac
+         BOOST_CPPFLAGS="-I$ac_boost_path/include"
+@@ -95,7 +95,7 @@ AC_DEFUN([AX_BOOST_BASE],
+         for ac_boost_path_tmp in /usr /usr/local /opt /opt/local ; do
+             if test -d "$ac_boost_path_tmp/include/boost" && test -r "$ac_boost_path_tmp/include/boost"; then
+                 case $target in
+-                     powerpc64*|ppc64*|sparc64*|x86_64*) BOOST_LDFLAGS="-L$ac_boost_path_tmp/lib64" ;;
++                     powerpc64*|ppc64*|sparc64*) BOOST_LDFLAGS="-L$ac_boost_path_tmp/lib64" ;;
+                      *)                       BOOST_LDFLAGS="-L$ac_boost_path_tmp/lib" ;;
+                 esac
+                 BOOST_CPPFLAGS="-I$ac_boost_path_tmp/include"
+@@ -172,7 +172,7 @@ AC_DEFUN([AX_BOOST_BASE],
+             if test "$ac_boost_lib_path" = ""
+             then
+                 case $target in
+-                     powerpc64*|ppc64*|sparc64*|x86_64*) BOOST_LDFLAGS="-L$best_path/lib64" ;;
++                     powerpc64*|ppc64*|sparc64*) BOOST_LDFLAGS="-L$best_path/lib64" ;;
+                      *)                       BOOST_LDFLAGS="-L$best_path/lib" ;;
+                 esac
+             fi
+diff --exclude-from=/home/dang/.scripts/diffrc -up -ruN mkvtoolnix-2.5.3.orig/configure mkvtoolnix-2.5.3/configure
+--- mkvtoolnix-2.5.3.orig/configure	2009-03-07 05:33:29.000000000 -0500
++++ mkvtoolnix-2.5.3/configure	2009-03-10 19:37:13.000000000 -0400
+@@ -10644,7 +10644,7 @@ echo $ECHO_N "checking for boostlib >= $
+ 
+                 if test "$ac_boost_path" != ""; then
+         case $target in
+-             powerpc64*|ppc64*|sparc64*|x86_64*) BOOST_LDFLAGS="-L$ac_boost_path/lib64" ;;
++             powerpc64*|ppc64*|sparc64*) BOOST_LDFLAGS="-L$ac_boost_path/lib64" ;;
+              *)                       BOOST_LDFLAGS="-L$ac_boost_path/lib" ;;
+         esac
+         BOOST_CPPFLAGS="-I$ac_boost_path/include"
+@@ -10652,7 +10652,7 @@ echo $ECHO_N "checking for boostlib >= $
+         for ac_boost_path_tmp in /usr /usr/local /opt /opt/local ; do
+             if test -d "$ac_boost_path_tmp/include/boost" && test -r "$ac_boost_path_tmp/include/boost"; then
+                 case $target in
+-                     powerpc64*|ppc64*|sparc64*|x86_64*) BOOST_LDFLAGS="-L$ac_boost_path_tmp/lib64" ;;
++                     powerpc64*|ppc64*|sparc64*) BOOST_LDFLAGS="-L$ac_boost_path_tmp/lib64" ;;
+                      *)                       BOOST_LDFLAGS="-L$ac_boost_path_tmp/lib" ;;
+                 esac
+                 BOOST_CPPFLAGS="-I$ac_boost_path_tmp/include"
+@@ -10776,7 +10776,7 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
+             if test "$ac_boost_lib_path" = ""
+             then
+                 case $target in
+-                     powerpc64*|ppc64*|sparc64*|x86_64*) BOOST_LDFLAGS="-L$best_path/lib64" ;;
++                     powerpc64*|ppc64*|sparc64*) BOOST_LDFLAGS="-L$best_path/lib64" ;;
+                      *)                       BOOST_LDFLAGS="-L$best_path/lib" ;;
+                 esac
+             fi

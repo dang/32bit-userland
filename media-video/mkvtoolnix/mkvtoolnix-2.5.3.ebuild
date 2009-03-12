@@ -1,6 +1,6 @@
 # Copyright 1999-2009 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/media-video/mkvtoolnix/mkvtoolnix-2.4.2.ebuild,v 1.1 2009/02/06 08:31:11 aballier Exp $
+# $Header: /var/cvsroot/gentoo-x86/media-video/mkvtoolnix/mkvtoolnix-2.5.3.ebuild,v 1.1 2009/03/10 02:06:37 flameeyes Exp $
 
 EAPI="1"
 inherit eutils wxwidgets flag-o-matic qt4 autotools
@@ -38,7 +38,7 @@ src_unpack() {
 	unpack ${A}
 	cd "${S}"
 
-	epatch "${FILESDIR}"/${P}-32bit.patch
+	epatch "${FILESDIR}"/${PN}-2.5.3-32bit.patch
 	eautoreconf
 }
 
@@ -61,6 +61,7 @@ src_compile() {
 src_install() {
 	emake DESTDIR="${D}" STRIP="true" install || die "make install failed"
 	dodoc AUTHORS ChangeLog README TODO
+	doman doc/mkv{merge,extract,info}.1 || die "doman failed"
 	dohtml doc/mkvmerge-gui.html doc/images/*
 	docinto examples
 	dodoc examples/*
