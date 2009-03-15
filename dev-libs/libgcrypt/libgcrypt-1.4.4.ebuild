@@ -21,7 +21,9 @@ DEPEND="${RDEPEND}"
 src_unpack() {
 	unpack ${A}
 	cd "${S}"
-	epatch "${FILESDIR}"/${PN}-1.4.3-32bit.patch
+	if [ "$(get_libdir)" == "lib32" ] ; then
+		epatch "${FILESDIR}"/${PN}-1.4.3-32bit.patch
+	fi
 }
 
 src_compile() {

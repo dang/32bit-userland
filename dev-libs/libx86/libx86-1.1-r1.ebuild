@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: /var/cvsroot/gentoo-x86/dev-libs/libx86/libx86-1.1-r1.ebuild,v 1.2 2008/09/15 12:55:28 pva Exp $
 
-inherit eutils multilib toolchain-funcs flag-o-matic
+inherit eutils multilib toolchain-funcs
 
 DESCRIPTION="A hardware-independent library for executing real-mode x86 code"
 HOMEPAGE="http://www.codon.org.uk/~mjg59/libx86"
@@ -23,7 +23,11 @@ src_unpack() {
 
 src_compile() {
 	tc-export CC
-	emake BACKEND=x86emu || die
+	local ARGS
+	if use amd64 || [ "$(get_libdir)" == "lib32" ] ; then
+		ARGS="BACKEND=x86emu"
+	fi
+	emake ${ARGS} || die
 }
 
 src_install() {

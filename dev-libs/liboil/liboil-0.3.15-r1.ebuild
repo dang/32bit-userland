@@ -30,8 +30,10 @@ src_prepare() {
 			-i Makefile.am Makefile.in || die "sed failed."
 	fi
 
-	epatch "${FILESDIR}"/${P}-32bit.patch
-	AT_M4DIR="m4" eautoreconf
+	if [ "$(get_libdir)" == "lib32" ] ; then
+		epatch "${FILESDIR}"/${P}-32bit.patch
+		AT_M4DIR="m4" eautoreconf
+	fi
 }
 
 src_configure() {
