@@ -1,6 +1,6 @@
 # Copyright 1999-2009 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/media-gfx/gimp/gimp-2.6.4.ebuild,v 1.1 2009/01/10 17:10:51 hanno Exp $
+# $Header: /var/cvsroot/gentoo-x86/media-gfx/gimp/gimp-2.6.5.ebuild,v 1.1 2009/02/15 22:39:04 hanno Exp $
 
 inherit eutils gnome2 fdo-mime multilib python autotools
 
@@ -10,7 +10,7 @@ SRC_URI="mirror://gimp/v2.6/${P}.tar.bz2"
 
 LICENSE="GPL-2"
 SLOT="2"
-KEYWORDS="~alpha ~amd64 ~ia64 ~sparc ~x86"
+KEYWORDS="~alpha ~amd64 ~ia64 ~ppc ~sparc ~x86"
 
 IUSE="alsa aalib altivec curl dbus debug doc exif gnome hal jpeg lcms mmx mng pdf png python smp sse svg tiff webkit wmf"
 
@@ -19,7 +19,6 @@ RDEPEND=">=dev-libs/glib-2.18.1
 	>=x11-libs/pango-1.18.0
 	>=media-libs/freetype-2.1.7
 	>=media-libs/fontconfig-2.2.0
-	>=media-libs/libart_lgpl-2.3.8-r1
 	sys-libs/zlib
 	dev-libs/libxml2
 	dev-libs/libxslt
@@ -55,7 +54,7 @@ DOCS="AUTHORS ChangeLog* HACKING NEWS README*"
 src_unpack() {
 	unpack "${A}"
 	cd "${S}"
-	epatch "${FILESDIR}"/${P}-32bit.patch
+	epatch "${FILESDIR}"/${PN}-2.6.4-32bit.patch
 	eautoreconf
 }
 
