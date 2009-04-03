@@ -23,3 +23,13 @@ Fifth, you need a willingness to deal with frustration. :P
 That said, this *does* work and I *am* running it on several real systems and
 number of VMs.  Good luck, and let me know (dang@gentoo.org) if you use it, or
 have suggestions.
+
+UPDATE:
+
+I'm working on using i686-pc-linux-gnu as the CHOST, rather than x86_64; when
+doing this, you need to build your kernel using:
+
+make ARCH=x86
+
+Make sure to select a 64bit kernel and enable 32bit emulation.  This should
+hopefully remove the need for all the packages in this overlay entirely.
