@@ -3,33 +3,31 @@ with failures and fix them?  This is for you!
 
 This is an overlay and a profile for 32bit userland on 64bit Gentoo.  It's hard to use.
 
-First, the profile needs to be copied over portage after every sync; for some
-reason, profiles in overlays don't work.
+This branch is for using i686 as your CHOST.  It is important that you set
+CHOST propery in your profile to use this branch.
 
-Second, you need a proper state to bootstrap from.  Normal 64bit didn't work
-when I tried it (although sparc has since done this; I intend to find out how,
-when I get a chance).  I haven't yet put my stage up, but it can be made with
-catalyst and some experimentation.
+Boot an amd64 boot CD, and install an i686 stage3.  Set up this overlay, and
+copy this profile over your portage, and pick the 32bit-userland profile.
 
-Third, you need this overlay, plus some other workarounds (which will make it
-into the overlay over time).
+Copy 64bit libc from your amd64 box (or maybe from the liveCD?  I didn't try
+that) into /lib64 and /usr/lib64.  
 
-Fourth, you need a full 64bit chroot for making binpkgs of certain things that
-must be multlib (such as gcc, glibc, and sandbox) and for building your kernel
-(the kernel build system is too smart for it's own good).
+Emerge a multilib gcc.
 
-Fifth, you need a willingness to deal with frustration. :P
+Emerge a multilib glibc.
 
-That said, this *does* work and I *am* running it on several real systems and
-number of VMs.  Good luck, and let me know (dang@gentoo.org) if you use it, or
-have suggestions.
+emerge -e world
 
-UPDATE:
+You will now have a /lib and a /lib32.  Anything left in /lib, move it to
+/lib32, and symlink.  Ditto /usr/lib[32].  Make sure to *not* overwrite
+anything already in lib32.  I used cp -avi.
 
-I'm working on using i686-pc-linux-gnu as the CHOST, rather than x86_64; when
-doing this, you need to build your kernel using:
+emerge -e world again.
+
+Continue installing your system like normal.  When you build a kernel, you need
+to make it with:
 
 make ARCH=x86
 
-Make sure to select a 64bit kernel and enable 32bit emulation.  This should
-hopefully remove the need for all the packages in this overlay entirely.
+Make sure to select a 64bit kernel and enable 32bit emulation.
+
