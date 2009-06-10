@@ -33,3 +33,9 @@ make ARCH=x86
 
 Make sure to select a 64bit kernel and enable 32bit emulation.  This should
 hopefully remove the need for all the packages in this overlay entirely.
+
+
+
+UPDATE2:
+
+You don't want this; you want the i686 branch
