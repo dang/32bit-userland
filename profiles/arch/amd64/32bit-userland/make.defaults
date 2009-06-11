@@ -32,3 +32,6 @@ DEFAULT_ABI="x86"
 ABI="${DEFAULT_ABI}"
 SYMLINK_LIB="yes"
 LIBDIR_x86="lib32"
+
+# 64bit kernel
+KERNEL_ABI="amd64"
