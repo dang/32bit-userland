@@ -9,8 +9,13 @@ CHOST propery in your profile to use this branch.
 Boot an amd64 boot CD, and install an i686 stage3.  Set up this overlay, and
 copy this profile over your portage, and pick the 32bit-userland profile.
 
-Copy 64bit libc from your amd64 box (or maybe from the liveCD?  I didn't try
-that) into /lib64 and /usr/lib64.  
+Patch your toolchain.eclass
+
+Copy 64bit libc from your amd64 box  into /lib64 and /usr/lib64.  You'll need /lib64/libc.* /usr/lib64/libc.*.
+
+From CD, mv /lib -> /lib32 and symlink /lib32 lib (and for /usr/lib)
+
+Copy /etc/env/04multilib to the chroot and remove /lib:/usr/lib:
 
 Emerge a multilib gcc.
 
