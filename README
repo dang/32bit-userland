@@ -11,15 +11,36 @@ copy this profile over your portage, and pick the 32bit-userland profile.
 
 Patch your toolchain.eclass
 
-Copy 64bit libc from your amd64 box  into /lib64 and /usr/lib64.  You'll need /lib64/libc.* /usr/lib64/libc.*.
+Copy 64bit libc from your amd64 box  into /lib64 and /usr/lib64.  You'll need:
+/lib64/libc.*
+/lib64/ld-*
+/lib64/libpthread*
+/lib64/libm.*
+/lib64/libm-*
+/usr/lib64/libc.*
+/usr/lib64/libc_*
+/usr/lib64/crt*
+/usr/lib64/libpthread*
+/usr/lib64/libm.*
 
 From CD, mv /lib -> /lib32 and symlink /lib32 lib (and for /usr/lib)
 
 Copy /etc/env/04multilib to the chroot and remove /lib:/usr/lib:
 
 Emerge a multilib gcc.
+	- Make sure gcc has -mudflap
+	- FEATURES: -sandbox userpriv
+	- Change uintptr_t in <stdint.h> to be always 64 bit
 
 Emerge a multilib glibc.
+	- FEATURES: -sandbox -userpriv
+
+You now have a working 32bit-userland sysetem.  Remeber to use those features when compiling gcc or glibc/linux-headers.  Especially linux-headers: it will install empty headers with sandbox or userpriv, and this will break *everything*.
+
+Make sure to select a 64bit kernel and enable 32bit emulation.
+
+
+************ The rest of this is old *************
 
 emerge -e world
 
