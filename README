@@ -35,6 +35,8 @@ Emerge a multilib gcc.
 Emerge a multilib glibc.
 	- FEATURES: -sandbox -userpriv
 
+Re-emerge python so it knows it's in lib32 not lib
+
 You now have a working 32bit-userland sysetem.  Remeber to use those features when compiling gcc or glibc/linux-headers.  Especially linux-headers: it will install empty headers with sandbox or userpriv, and this will break *everything*.
 
 Make sure to select a 64bit kernel and enable 32bit emulation.
