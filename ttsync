@@ -1,0 +1,41 @@
+#!/bin/bash
+#
+# Sync your 32bit-userland system
+#
+# Emerge --sync uses rsync, which will overwrite/delete any local changes,
+# including your 32bit userland profile and your toolchain patch.  This will
+# eix-sync, then fix your 32bit-userland to continue to work.  Must be run as
+# root (or at least as someone with write permission to ${PORTDIR}
+#
+
+
+# Point this at your overlay.
+TTOVERLAY="/home/portage/overlays/32bit-userland"
+
+PORTDIR="/usr/portage"
+
+. /etc/make.conf
+
+die() {
+	echo "$@"
+	exit 1
+}
+
+if [ ! -d ${TTOVERLAY} ]; then
+	die "No overlay at ${TTOVERLAY}"
+fi
+TTNAME=$(cat ${TTOVERLAY}/profiles/repo_name)
+if [ "${TTNAME}" != "32bit-userland" ]; then
+	die "Wrong overlay name \'${TTNAME}\' at ${TTOVERLAY}/profiles/repo_name"
+fi
+
+UPDATE="eix-sync"
+
+which eix > /dev/null || UPDATE="emerge --sync"
+
+${UPDATE} || die "Sync failed"
+cd ${PORTDIR}/profiles || die "Couldn't cd to ${PORTDIR}/profiles"
+cp -a ${TTOVERLAY}/profiles/arch ${TTOVERLAY}/profiles/default . || die "Failed to copy profles"
+cd ${PORTDIR}/eclass || die "Couldn't cd to ${PORTDIR}/eclass"
+patch -p0 < ${TTOVERLAY}/toolchain-32bit-userland.patch || die "failed to patch toolchain.eclass"
+echo "Done"
