@@ -29,6 +29,13 @@ if [ "${TTNAME}" != "32bit-userland" ]; then
 	die "Wrong overlay name \'${TTNAME}\' at ${TTOVERLAY}/profiles/repo_name"
 fi
 
+GIT="$(which git)"
+if [ -n "${GIT}" ]; then
+	cd "${TTOVERLAY}" 
+	git pull || die "git pull of overlay failed"
+	cd -
+fi
+
 UPDATE="eix-sync"
 
 which eix > /dev/null || UPDATE="emerge --sync"
