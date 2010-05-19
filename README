@@ -37,9 +37,16 @@ Emerge a multilib glibc.
 
 Re-emerge python so it knows it's in lib32 not lib
 
-You now have a working 32bit-userland sysetem.  Remeber to use those features when compiling gcc or glibc/linux-headers.  Especially linux-headers: it will install empty headers with sandbox or userpriv, and this will break *everything*.
+You now have a working 32bit-userland sysetem.  Remeber to use those features
+when compiling gcc or glibc/linux-headers.  Especially linux-headers: it will
+install empty headers with sandbox or userpriv, and this will break
+*everything*.
 
 Make sure to select a 64bit kernel and enable 32bit emulation.
+
+I've included a script in this overlay named ttsync.  It allows you to sync
+your portage and fixes your profile and toolchain.eclass.  Use it instead of
+emerge --sync or eix-sync
 
 
 ************ The rest of this is old *************
