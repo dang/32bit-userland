@@ -3,8 +3,8 @@ with failures and fix them?  This is for you!
 
 This is an overlay and a profile for 32bit userland on 64bit Gentoo.  It's hard to use.
 
-This branch is for using i686 as your CHOST.  It is important that you set
-CHOST propery in your profile to use this branch.
+This overlay uses i686 as your CHOST.  It is important that you set CHOST
+propery in your profile to use this overlay.
 
 Boot an amd64 boot CD, and install an i686 stage3.  Set up this overlay, and
 copy this profile over your portage, and pick the 32bit-userland profile.
@@ -48,21 +48,4 @@ I've included a script in this overlay named ttsync.  It allows you to sync
 your portage and fixes your profile and toolchain.eclass.  Use it instead of
 emerge --sync or eix-sync
 
-
-************ The rest of this is old *************
-
-emerge -e world
-
-You will now have a /lib and a /lib32.  Anything left in /lib, move it to
-/lib32, and symlink.  Ditto /usr/lib[32].  Make sure to *not* overwrite
-anything already in lib32.  I used cp -avi.
-
-emerge -e world again.
-
-Continue installing your system like normal.  When you build a kernel, you need
-to make it with:
-
-make ARCH=x86
-
-Make sure to select a 64bit kernel and enable 32bit emulation.
 
