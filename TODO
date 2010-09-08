@@ -1,9 +1,0 @@
-Packages to add to overlay:
-
-<none>
-
-Packages currently needing 64bit:
-sandbox
-gcc
-glibc
-kernel
