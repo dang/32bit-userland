@@ -1,9 +1,10 @@
---- configure.orig	2009-07-01 22:54:39.830348980 +0200
-+++ configure	2009-07-01 23:01:11.346350261 +0200
-@@ -1206,9 +1206,7 @@
+--- configure
++++ configure
+@@ -1225,10 +1225,7 @@
+   XCloseDisplay(dpy);
  }
  EOF
-   [ -n "$INCX11" ] && I_INCX11=`prefix_I "$INCX11"`
+-  [ -n "$INCX11" ] && I_INCX11=`prefix_I "$INCX11"`
 -  if test_compile "$LIBX11 $I_INCX11" Xlibs Xlibs; then
 -    log_success "found"
 -  fi
@@ -11,7 +12,7 @@
  }
  
  
-@@ -1288,19 +1286,6 @@
+@@ -1382,21 +1379,6 @@
  #include <GL/glu.h>
  extern "C" int main(void)
  {
@@ -21,7 +22,9 @@
 -  dpy = XOpenDisplay(NULL);
 -  if (dpy)
 -  {
--    if (glXQueryVersion(dpy, &major, &minor))
+-    Bool glx_version = glXQueryVersion(dpy, &major, &minor);
+-    XCloseDisplay(dpy);
+-    if (glx_version)
 -    {
 -      printf("found version %u.%u, OK.\n", major, minor);
 -      return 0;

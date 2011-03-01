@@ -1,10 +1,10 @@
-# Copyright 1999-2010 Gentoo Foundation
+# Copyright 1999-2011 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/app-emulation/virtualbox-ose/virtualbox-ose-3.1.2.ebuild,v 1.1 2010/01/28 13:12:09 patrick Exp $
+# $Header: /var/cvsroot/gentoo-x86/app-emulation/virtualbox/virtualbox-3.2.12-r4.ebuild,v 1.5 2011/02/03 07:50:14 tomka Exp $
 
 EAPI=2
 
-inherit eutils fdo-mime flag-o-matic linux-info pax-utils qt4 toolchain-funcs
+inherit eutils fdo-mime flag-o-matic linux-info pax-utils qt4-r2 toolchain-funcs
 
 if [[ ${PV} == "9999" ]] ; then
 	# XXX: should finish merging the -9999 ebuild into this one ...
@@ -21,8 +21,8 @@ HOMEPAGE="http://www.virtualbox.org/"
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="~amd64 ~x86"
-IUSE="+additions alsa +hal headless pulseaudio +opengl python +qt4 sdk vboxwebsrv"
+KEYWORDS="amd64 x86"
+IUSE="+additions alsa headless pulseaudio +opengl python +qt4 sdk vboxwebsrv vnc"
 
 RDEPEND="!app-emulation/virtualbox-bin
 	~app-emulation/virtualbox-modules-${PV}
@@ -30,12 +30,18 @@ RDEPEND="!app-emulation/virtualbox-bin
 	>=dev-libs/libxslt-1.1.19
 	net-misc/curl
 	!headless? (
-		qt4? ( x11-libs/qt-gui:4 x11-libs/qt-core:4 opengl?	( x11-libs/qt-opengl:4 ) )
-		opengl? ( virtual/opengl virtual/glut )
+		qt4? (
+			x11-libs/qt-gui:4
+			x11-libs/qt-core:4
+			opengl?	( x11-libs/qt-opengl:4 )
+		)
+		opengl? ( virtual/opengl media-libs/freeglut )
 		x11-libs/libXcursor
 		media-libs/libsdl[X,video]
 		x11-libs/libXt
-	)"
+	)
+	headless? ( x11-libs/libX11 )
+	vnc? ( >=net-libs/libvncserver-0.9.7 )"
 DEPEND="${RDEPEND}
 	>=dev-util/kbuild-0.1.5-r1
 	>=dev-lang/yasm-0.6.2
@@ -46,12 +52,11 @@ DEPEND="${RDEPEND}
 	sys-libs/libcap
 	dev-util/pkgconfig
 	alsa? ( >=media-libs/alsa-lib-1.0.13 )
-	hal? ( sys-apps/hal )
+	!headless? ( x11-libs/libXinerama )
 	pulseaudio? ( media-sound/pulseaudio )
-	python? ( >=dev-lang/python-2.3 )
+	python? ( >=dev-lang/python-2.3[threads] )
 	vboxwebsrv? ( >=net-libs/gsoap-2.7.13 )"
-RDEPEND="${RDEPEND}
-	additions? ( ~app-emulation/virtualbox-ose-additions-${PV} )"
+PDEPEND="additions? ( ~app-emulation/virtualbox-additions-${PV} )"
 
 QA_TEXTRELS_x86="usr/lib/virtualbox-ose/VBoxGuestPropSvc.so
 	usr/lib/virtualbox-ose/VBoxSDL.so
@@ -82,6 +87,7 @@ QA_TEXTRELS_x86="usr/lib/virtualbox-ose/VBoxGuestPropSvc.so
 	usr/lib/virtualbox-ose/VBoxPython2_4.so
 	usr/lib/virtualbox-ose/VBoxPython2_5.so
 	usr/lib/virtualbox-ose/VBoxPython2_6.so
+	usr/lib/virtualbox-ose/VBoxPython2_7.so
 	usr/lib/virtualbox-ose/VBoxXPCOMC.so
 	usr/lib/virtualbox-ose/VBoxOGLhostcrutil.so
 	usr/lib/virtualbox-ose/VBoxNetDHCP.so"
@@ -107,32 +113,44 @@ src_prepare() {
 
 	# Disable things unused or split into separate ebuilds
 	sed -e "s/MY_LIBDIR/$(get_libdir)/" \
-		"${FILESDIR}"/${PN}-3-localconfig > LocalConfig.kmk || die
+		"${FILESDIR}"/${PN}-ose-3-localconfig > LocalConfig.kmk || die
 
 	# unset useless/problematic mesa checks in configure
-	epatch "${FILESDIR}/${PN}-3.0.0-mesa-check.patch"
+	epatch "${FILESDIR}/${PN}-ose-3.2.8-mesa-check.patch"
+
+	# fix build with --as-needed (bug #249295)
+	epatch "${FILESDIR}/${PN}-ose-asneeded.patch"
+
+	# add the --enable-vnc option to configure script (bug #348204)
+	epatch "${FILESDIR}/${PN}-ose-vnc.patch"
+
 	# 32bit userland
 	epatch "${FILESDIR}/${PN}-3.1.2-32bit-userland.patch"
 }
 
 src_configure() {
 	local myconf
-	use alsa       || myconf="${myconf} --disable-alsa"
-	use opengl     || myconf="${myconf} --disable-opengl"
-	use pulseaudio || myconf="${myconf} --disable-pulse"
-	use python     || myconf="${myconf} --disable-python"
-	use hal        || myconf="${myconf} --disable-dbus"
-	use vboxwebsrv && myconf="${myconf} --enable-webservice"
+	use alsa       || myconf+=" --disable-alsa"
+	use opengl     || myconf+=" --disable-opengl"
+	use pulseaudio || myconf+=" --disable-pulse"
+	use python     || myconf+=" --disable-python"
+	use vboxwebsrv && myconf+=" --enable-webservice"
+	use vnc        && myconf+=" --enable-vnc"
 	if ! use headless ; then
-		use qt4 || myconf="${myconf} --disable-qt4"
+		use qt4 || myconf+=" --disable-qt4"
 	else
-		myconf="${myconf} --build-headless --disable-opengl"
+		myconf+=" --build-headless --disable-opengl"
 	fi
+
+	# bug #339914
+	#gcc-spec-pie && append-flags "-nopie"
+
 	# not an autoconf script
 	./configure \
 		--with-gcc="$(tc-getCC)" \
 		--with-g++="$(tc-getCXX)" \
 		--disable-kmods \
+		--disable-dbus \
 		${myconf} \
 		|| die "configure failed"
 }
@@ -154,11 +172,11 @@ src_compile() {
 }
 
 src_install() {
-	cd "${S}"/out/linux.*/release/bin || die
+	cd "${S}"/out/linux.${ARCH}/release/bin || die
 
 	# Create configuration files
 	insinto /etc/vbox
-	newins "${FILESDIR}/${PN}-3-config" vbox.cfg
+	newins "${FILESDIR}/${PN}-ose-3-config" vbox.cfg
 
 	# Set the right libdir
 	sed -i \
@@ -167,7 +185,7 @@ src_install() {
 
 	# Symlink binaries to the shipped wrapper
 	exeinto /usr/$(get_libdir)/${PN}
-	newexe "${FILESDIR}/${PN}-3-wrapper" "VBox" || die
+	newexe "${FILESDIR}/${PN}-ose-3-wrapper" "VBox" || die
 	fowners root:vboxusers /usr/$(get_libdir)/${PN}/VBox
 	fperms 0750 /usr/$(get_libdir)/${PN}/VBox
 
@@ -198,8 +216,13 @@ src_install() {
 		fowners root:vboxusers /usr/$(get_libdir)/${PN}/${each}
 		fperms 0750 /usr/$(get_libdir)/${PN}/${each}
 	done
-	# VBoxNetAdpCtl binary needs to be suid root in any case..
+	# VBoxNetAdpCtl and VBoxNetDHCP binaries need to be suid root in any case..
 	fperms 4750 /usr/$(get_libdir)/${PN}/VBoxNetAdpCtl
+	fperms 4750 /usr/$(get_libdir)/${PN}/VBoxNetDHCP
+	# bug #335500
+	for each in VBox{Manage,SVC,XPCOMIPCD,Tunctl,NetAdpCtl,NetDHCP} ; do
+		pax-mark -m "${D}"/usr/$(get_libdir)/${PN}/${each}
+	done
 
 	if ! use headless ; then
 		for each in VBox{SDL,Headless} ; do
@@ -209,10 +232,11 @@ src_install() {
 			pax-mark -m "${D}"/usr/$(get_libdir)/${PN}/${each}
 		done
 
-		if use opengl ; then
+		if use opengl && use qt4 ; then
 			doins VBoxTestOGL || die
 			fowners root:vboxusers /usr/$(get_libdir)/${PN}/VBoxTestOGL
 			fperms 0750 /usr/$(get_libdir)/${PN}/VBoxTestOGL
+			pax-mark -m "${D}"/usr/$(get_libdir)/${PN}/VBoxTestOGL
 		fi
 
 		dosym /usr/$(get_libdir)/${PN}/VBox /usr/bin/VBoxSDL
@@ -227,13 +251,21 @@ src_install() {
 		fi
 
 		newicon	"${S}"/src/VBox/Frontends/VirtualBox/images/OSE/VirtualBox_32px.png ${PN}.png
-		domenu "${FILESDIR}"/${PN}.desktop
+		newmenu "${FILESDIR}"/${PN}-ose.desktop-2 ${PN}.desktop
 	else
 		doins VBoxHeadless || die
 		fowners root:vboxusers /usr/$(get_libdir)/${PN}/VBoxHeadless
 		fperms 4750 /usr/$(get_libdir)/${PN}/VBoxHeadless
 		pax-mark -m "${D}"/usr/$(get_libdir)/${PN}/VBoxHeadless
 	fi
+
+	# Install EFI Firmware files (bug #320757)
+	pushd "${S}"/src/VBox/Devices/EFI/FirmwareBin &>/dev/null || die
+	for fwfile in VBoxEFI{32,64}.fd ; do
+		doins ${fwfile} || die
+		fowners root:vboxusers /usr/$(get_libdir)/${PN}/${fwfile} || die
+	done
+	popd &>/dev/null || die
 
 	insinto /usr/share/${PN}
 	if ! use headless && use qt4 ; then
@@ -257,6 +289,15 @@ pkg_postinst() {
 	elog ""
 	elog "For advanced networking setups you should emerge:"
 	elog "net-misc/bridge-utils and sys-apps/usermode-utilities"
+	elog ""
+	elog "IMPORTANT!"
+	elog "If you upgrade from app-emulation/virtualbox-ose make sure to run"
+	elog "\"env-update\" as root and logout and relogin as the user you wish"
+	elog "to run ${PN} as."
+	elog ""
+	elog "Please visit http://www.virtualbox.org/wiki/Editions for"
+	elog "an overview about the different features of ${PN}"
+	elog "and virtualbox-bin"
 }
 
 pkg_postrm() {

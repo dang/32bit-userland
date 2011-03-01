@@ -1,0 +1,107 @@
+# ChangeLog for app-emulation/virtualbox
+# Copyright 1999-2011 Gentoo Foundation; Distributed under the GPL v2
+# $Header: /var/cvsroot/gentoo-x86/app-emulation/virtualbox/ChangeLog,v 1.62 2011/02/20 18:32:05 polynomial-c Exp $
+
+  20 Feb 2011; Lars Wendler <polynomial-c@gentoo.org>
+  -files/virtualbox-ose-3.0.0-mesa-check.patch, -virtualbox-3.1.8.ebuild,
+  -files/virtualbox-ose-3.1.8-iasl-length-calculation-fix.patch:
+  Removed ancient 3.1.8 version.
+
+*virtualbox-4.0.4 (18 Feb 2011)
+
+  18 Feb 2011; Lars Wendler <polynomial-c@gentoo.org>
+  -virtualbox-4.0.0-r1.ebuild,
+  -files/virtualbox-4.0.0-restore_old_machines_dir.patch,
+  +virtualbox-4.0.4.ebuild, +files/virtualbox-4-vnc.patch:
+  Version bump. Removed old. Readded vnc USE flag as requested by Branko Majic
+  in bug #355481.
+
+  03 Feb 2011; Thomas Kahle <tomka@gentoo.org> virtualbox-3.2.12-r4.ebuild:
+  x86 stable per bug 336465
+
+  26 Jan 2011; Lars Wendler <polynomial-c@gentoo.org>
+  virtualbox-3.2.12-r4.ebuild:
+  Removed hardened "fix" for now. Thanks to Martin Walch who reported this in
+  bug #352262
+
+  21 Jan 2011; Lars Wendler <polynomial-c@gentoo.org>
+  virtualbox-4.0.0-r1.ebuild, virtualbox-4.0.2.ebuild:
+  Respect CXXFLAGS. Thanks to jlec for the hint.
+
+*virtualbox-4.0.2 (18 Jan 2011)
+
+  18 Jan 2011; Lars Wendler <polynomial-c@gentoo.org> +virtualbox-4.0.2.ebuild:
+  Version bump.
+
+  17 Jan 2011; Lars Wendler <polynomial-c@gentoo.org>
+  virtualbox-4.0.0-r1.ebuild:
+  Removed vnc USE flag as vnc support is gone in vbox-4. Thanks to Philipp
+  Gassmann who brought this to my attention via email.
+
+  12 Jan 2011; Lars Wendler <polynomial-c@gentoo.org>
+  virtualbox-4.0.0-r1.ebuild:
+  Added sys-libs/pam to build dependencies. Thanks to Ben Kohler who reported
+  this in bug #351404.
+
+  08 Jan 2011; Lars Wendler <polynomial-c@gentoo.org>
+  virtualbox-4.0.0-r1.ebuild:
+  Moved installation of .desktop file into qt4 USE condition. Thanks to jlec
+  for the hint.
+
+  08 Jan 2011; Lars Wendler <polynomial-c@gentoo.org>
+  -virtualbox-3.2.12-r3.ebuild, virtualbox-3.2.12-r4.ebuild,
+  files/virtualbox-ose-3-config, files/virtualbox-ose-3-localconfig:
+  Fixed install path in vbox.cfg. Thanks to Robert Cernansky for reporting this
+  issue in bug #351109.
+
+*virtualbox-4.0.0-r1 (08 Jan 2011)
+
+  08 Jan 2011; Lars Wendler <polynomial-c@gentoo.org> -virtualbox-4.0.0.ebuild,
+  +virtualbox-4.0.0-r1.ebuild:
+  Replaced java-pkg-2 eclass with java-pkg-opt-2. Thanks to Andreas Fink (bug
+  #351090) and Zurab Gvishiani (bug #351096) for reporting this issue.
+
+  07 Jan 2011; Lars Wendler <polynomial-c@gentoo.org> virtualbox-4.0.0.ebuild:
+  Respect LDFLAGS properly. Thanks to xarthisius for providing a feasible fix.
+
+  07 Jan 2011; Lars Wendler <polynomial-c@gentoo.org>
+  virtualbox-3.2.12-r3.ebuild, virtualbox-3.2.12-r4.ebuild,
+  files/virtualbox-4-asneeded.patch:
+  Fixed forced as-needed issue (bug #350907). Thanks to xarthisius for
+  providing a fix. Really fixed PDEPEND for pkgmove.
+
+*virtualbox-9999 (07 Jan 2011)
+*virtualbox-3.2.12-r4 (07 Jan 2011)
+*virtualbox-3.2.12-r3 (07 Jan 2011)
+*virtualbox-3.1.8 (07 Jan 2011)
+
+  07 Jan 2011; Lars Wendler <polynomial-c@gentoo.org> +virtualbox-3.1.8.ebuild,
+  +files/virtualbox-ose-3.2.0-mesa-check.patch, +virtualbox-3.2.12-r3.ebuild,
+  +virtualbox-3.2.12-r4.ebuild, +files/virtualbox-ose-3-config,
+  +files/virtualbox-ose-3-localconfig, +virtualbox-9999.ebuild,
+  +files/virtualbox-ose-asneeded.patch, +files/virtualbox-ose-vnc.patch:
+  Added old versions for pkgmove.
+
+  07 Jan 2011; Lars Wendler <polynomial-c@gentoo.org> virtualbox-4.0.0.ebuild:
+  Minor elog message adjustment.
+
+  06 Jan 2011; Lars Wendler <polynomial-c@gentoo.org> virtualbox-4.0.0.ebuild:
+  Even more runtime-dependencies.
+
+  06 Jan 2011; Lars Wendler <polynomial-c@gentoo.org> virtualbox-4.0.0.ebuild:
+  Added some more runtime-dependencies.
+
+*virtualbox-4.0.0 (06 Jan 2011)
+
+  06 Jan 2011; Lars Wendler <polynomial-c@gentoo.org>
+  +files/virtualbox-ose.desktop-2,
+  +files/virtualbox-ose-3.2.8-mesa-check.patch,
+  +files/virtualbox-ose-3-wrapper, +virtualbox-4.0.0.ebuild,
+  +files/virtualbox-4-asneeded.patch, +files/virtualbox-4-config,
+  +files/virtualbox-4-localconfig, +files/virtualbox-4-makeself-check.patch,
+  +files/virtualbox-4-mkisofs-check.patch,
+  +files/virtualbox-4-restore_old_machines_dir.patch,
+  +files/virtualbox-4-vnc.patch, +files/vboxwebsrv-confd,
+  +files/vboxwebsrv-initd, +metadata.xml:
+  Initial version.
+

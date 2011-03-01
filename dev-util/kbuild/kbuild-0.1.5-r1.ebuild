@@ -1,4 +1,4 @@
-# Copyright 1999-2010 Gentoo Foundation
+# Copyright 1999-2011 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: /var/cvsroot/gentoo-x86/dev-util/kbuild/kbuild-0.1.5-r1.ebuild,v 1.5 2009/11/09 13:06:05 maekke Exp $
 
@@ -18,7 +18,7 @@ SLOT="0"
 KEYWORDS="amd64 x86"
 IUSE=""
 
-DEPEND="dev-util/cvs
+DEPEND="dev-vcs/cvs
 	dev-util/subversion
 	sys-devel/gettext"
 RDEPEND=""

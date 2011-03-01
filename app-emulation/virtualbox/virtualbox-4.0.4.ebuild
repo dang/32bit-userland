@@ -1,19 +1,19 @@
-# Copyright 1999-2010 Gentoo Foundation
+# Copyright 1999-2011 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/app-emulation/virtualbox-ose/virtualbox-ose-3.1.2.ebuild,v 1.1 2010/01/28 13:12:09 patrick Exp $
+# $Header: /var/cvsroot/gentoo-x86/app-emulation/virtualbox/virtualbox-4.0.4.ebuild,v 1.1 2011/02/19 08:35:21 polynomial-c Exp $
 
 EAPI=2
 
-inherit eutils fdo-mime flag-o-matic linux-info pax-utils qt4 toolchain-funcs
+inherit eutils fdo-mime flag-o-matic linux-info pax-utils qt4-r2 toolchain-funcs java-pkg-opt-2
 
 if [[ ${PV} == "9999" ]] ; then
 	# XXX: should finish merging the -9999 ebuild into this one ...
 	ESVN_REPO_URI="http://www.virtualbox.org/svn/vbox/trunk"
 	inherit linux-mod subversion
 else
-	MY_P=VirtualBox-${PV}-OSE
+	MY_P=VirtualBox-${PV}
 	SRC_URI="http://download.virtualbox.org/virtualbox/${PV}/${MY_P}.tar.bz2"
-	S=${WORKDIR}/${MY_P/-OSE/_OSE}
+	S="${WORKDIR}/${MY_P}_OSE"
 fi
 
 DESCRIPTION="Software family of powerful x86 virtualization"
@@ -22,20 +22,32 @@ HOMEPAGE="http://www.virtualbox.org/"
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
-IUSE="+additions alsa +hal headless pulseaudio +opengl python +qt4 sdk vboxwebsrv"
+IUSE="+additions alsa doc extensions headless java pulseaudio +opengl python +qt4 sdk vboxwebsrv vnc"
 
 RDEPEND="!app-emulation/virtualbox-bin
 	~app-emulation/virtualbox-modules-${PV}
 	dev-libs/libIDL
 	>=dev-libs/libxslt-1.1.19
 	net-misc/curl
+	dev-libs/openssl
+	dev-libs/libxml2
+	sys-libs/zlib
 	!headless? (
-		qt4? ( x11-libs/qt-gui:4 x11-libs/qt-core:4 opengl?	( x11-libs/qt-opengl:4 ) )
-		opengl? ( virtual/opengl virtual/glut )
+		qt4? (
+			x11-libs/qt-gui:4
+			x11-libs/qt-core:4
+			opengl? ( x11-libs/qt-opengl:4 )
+			x11-libs/libXinerama
+		)
+		opengl? ( virtual/opengl media-libs/freeglut )
+		x11-libs/libX11
 		x11-libs/libXcursor
-		media-libs/libsdl[X,video]
+		x11-libs/libXext
+		x11-libs/libXmu
 		x11-libs/libXt
-	)"
+		media-libs/libsdl[X,video]
+	)
+	vnc? ( >=net-libs/libvncserver-0.9.7 )"
 DEPEND="${RDEPEND}
 	>=dev-util/kbuild-0.1.5-r1
 	>=dev-lang/yasm-0.6.2
@@ -43,48 +55,59 @@ DEPEND="${RDEPEND}
 	sys-devel/dev86
 	sys-power/iasl
 	media-libs/libpng
+	sys-libs/pam
 	sys-libs/libcap
+	doc? (
+		dev-texlive/texlive-basic
+		dev-texlive/texlive-latex
+		dev-texlive/texlive-latexrecommended
+		dev-texlive/texlive-latexextra
+		dev-texlive/texlive-fontsrecommended
+		dev-texlive/texlive-fontsextra
+	)
+	java? ( virtual/jdk )
 	dev-util/pkgconfig
 	alsa? ( >=media-libs/alsa-lib-1.0.13 )
-	hal? ( sys-apps/hal )
+	!headless? ( x11-libs/libXinerama )
 	pulseaudio? ( media-sound/pulseaudio )
-	python? ( >=dev-lang/python-2.3 )
+	python? ( >=dev-lang/python-2.3[threads] )
 	vboxwebsrv? ( >=net-libs/gsoap-2.7.13 )"
-RDEPEND="${RDEPEND}
-	additions? ( ~app-emulation/virtualbox-ose-additions-${PV} )"
+PDEPEND="additions? ( ~app-emulation/virtualbox-additions-${PV} )
+	extensions? ( ~app-emulation/virtualbox-extpack-oracle-${PV} )"
 
 QA_TEXTRELS_x86="usr/lib/virtualbox-ose/VBoxGuestPropSvc.so
-	usr/lib/virtualbox-ose/VBoxSDL.so
-	usr/lib/virtualbox-ose/VBoxSharedFolders.so
-	usr/lib/virtualbox-ose/VBoxDD2.so
-	usr/lib/virtualbox-ose/VBoxOGLrenderspu.so
-	usr/lib/virtualbox-ose/VBoxPython.so
-	usr/lib/virtualbox-ose/VBoxDD.so
-	usr/lib/virtualbox-ose/VBoxDDU.so
-	usr/lib/virtualbox-ose/VBoxREM64.so
-	usr/lib/virtualbox-ose/VBoxSharedClipboard.so
-	usr/lib/virtualbox-ose/VBoxHeadless.so
-	usr/lib/virtualbox-ose/VBoxRT.so
-	usr/lib/virtualbox-ose/VBoxREM.so
-	usr/lib/virtualbox-ose/VBoxSettings.so
-	usr/lib/virtualbox-ose/VBoxKeyboard.so
-	usr/lib/virtualbox-ose/VBoxSharedCrOpenGL.so
-	usr/lib/virtualbox-ose/VBoxVMM.so
-	usr/lib/virtualbox-ose/VirtualBox.so
-	usr/lib/virtualbox-ose/VBoxOGLhosterrorspu.so
-	usr/lib/virtualbox-ose/components/VBoxC.so
-	usr/lib/virtualbox-ose/components/VBoxSVCM.so
-	usr/lib/virtualbox-ose/components/VBoxDDU.so
-	usr/lib/virtualbox-ose/components/VBoxRT.so
-	usr/lib/virtualbox-ose/components/VBoxREM.so
-	usr/lib/virtualbox-ose/components/VBoxVMM.so
-	usr/lib/virtualbox-ose/VBoxREM32.so
-	usr/lib/virtualbox-ose/VBoxPython2_4.so
-	usr/lib/virtualbox-ose/VBoxPython2_5.so
-	usr/lib/virtualbox-ose/VBoxPython2_6.so
-	usr/lib/virtualbox-ose/VBoxXPCOMC.so
-	usr/lib/virtualbox-ose/VBoxOGLhostcrutil.so
-	usr/lib/virtualbox-ose/VBoxNetDHCP.so"
+	usr/lib/virtualbox/VBoxSDL.so
+	usr/lib/virtualbox/VBoxSharedFolders.so
+	usr/lib/virtualbox/VBoxDD2.so
+	usr/lib/virtualbox/VBoxOGLrenderspu.so
+	usr/lib/virtualbox/VBoxPython.so
+	usr/lib/virtualbox/VBoxDD.so
+	usr/lib/virtualbox/VBoxDDU.so
+	usr/lib/virtualbox/VBoxREM64.so
+	usr/lib/virtualbox/VBoxSharedClipboard.so
+	usr/lib/virtualbox/VBoxHeadless.so
+	usr/lib/virtualbox/VBoxRT.so
+	usr/lib/virtualbox/VBoxREM.so
+	usr/lib/virtualbox/VBoxSettings.so
+	usr/lib/virtualbox/VBoxKeyboard.so
+	usr/lib/virtualbox/VBoxSharedCrOpenGL.so
+	usr/lib/virtualbox/VBoxVMM.so
+	usr/lib/virtualbox/VirtualBox.so
+	usr/lib/virtualbox/VBoxOGLhosterrorspu.so
+	usr/lib/virtualbox/components/VBoxC.so
+	usr/lib/virtualbox/components/VBoxSVCM.so
+	usr/lib/virtualbox/components/VBoxDDU.so
+	usr/lib/virtualbox/components/VBoxRT.so
+	usr/lib/virtualbox/components/VBoxREM.so
+	usr/lib/virtualbox/components/VBoxVMM.so
+	usr/lib/virtualbox/VBoxREM32.so
+	usr/lib/virtualbox/VBoxPython2_4.so
+	usr/lib/virtualbox/VBoxPython2_5.so
+	usr/lib/virtualbox/VBoxPython2_6.so
+	usr/lib/virtualbox/VBoxPython2_7.so
+	usr/lib/virtualbox/VBoxXPCOMC.so
+	usr/lib/virtualbox/VBoxOGLhostcrutil.so
+	usr/lib/virtualbox/VBoxNetDHCP.so"
 
 pkg_setup() {
 	if ! use headless && ! use qt4 ; then
@@ -107,32 +130,54 @@ src_prepare() {
 
 	# Disable things unused or split into separate ebuilds
 	sed -e "s/MY_LIBDIR/$(get_libdir)/" \
-		"${FILESDIR}"/${PN}-3-localconfig > LocalConfig.kmk || die
+		"${FILESDIR}"/${PN}-4-localconfig > LocalConfig.kmk || die
 
-	# unset useless/problematic mesa checks in configure
-	epatch "${FILESDIR}/${PN}-3.0.0-mesa-check.patch"
-	# 32bit userland
-	epatch "${FILESDIR}/${PN}-3.1.2-32bit-userland.patch"
+	# unset useless/problematic checks in configure
+	epatch "${FILESDIR}/${PN}-ose-3.2.8-mesa-check.patch"
+	epatch "${FILESDIR}/${PN}-4-makeself-check.patch"
+	epatch "${FILESDIR}/${PN}-4-mkisofs-check.patch"
+
+	# fix build with --as-needed (bug #249295 and bug #350907)
+	epatch "${FILESDIR}/${PN}-4-asneeded.patch"
+
+	# Respect LDFLAGS
+	sed -e "s/_LDFLAGS\.${ARCH}*.*=/& ${LDFLAGS}/g" \
+		-i Config.kmk src/libs/xpcom18a4/Config.kmk || die
+
+	# We still want to use ${HOME}/.VirtualBox/Machines as machines dir.
+	epatch "${FILESDIR}/${PN}-4.0.2-restore_old_machines_dir.patch"
+
+	# add the --enable-vnc option to configure script (bug #348204)
+	epatch "${FILESDIR}/${PN}-4-vnc.patch"
+
+	# add correct java path
+	if use java ; then
+		sed "s:/usr/lib/jvm/java-6-sun:$(java-config -O):" \
+			-i "${S}"/Config.kmk || die
+	fi
 }
 
 src_configure() {
 	local myconf
-	use alsa       || myconf="${myconf} --disable-alsa"
-	use opengl     || myconf="${myconf} --disable-opengl"
-	use pulseaudio || myconf="${myconf} --disable-pulse"
-	use python     || myconf="${myconf} --disable-python"
-	use hal        || myconf="${myconf} --disable-dbus"
-	use vboxwebsrv && myconf="${myconf} --enable-webservice"
+	use alsa       || myconf+=" --disable-alsa"
+	use opengl     || myconf+=" --disable-opengl"
+	use pulseaudio || myconf+=" --disable-pulse"
+	use python     || myconf+=" --disable-python"
+	use java       || myconf+=" --disable-java"
+	use vboxwebsrv && myconf+=" --enable-webservice"
+	use vnc        && myconf+=" --enable-vnc"
+	use doc        || myconf+=" --disable-docs"
 	if ! use headless ; then
-		use qt4 || myconf="${myconf} --disable-qt4"
+		use qt4 || myconf+=" --disable-qt4"
 	else
-		myconf="${myconf} --build-headless --disable-opengl"
+		myconf+=" --build-headless --disable-opengl"
 	fi
 	# not an autoconf script
 	./configure \
 		--with-gcc="$(tc-getCC)" \
 		--with-g++="$(tc-getCXX)" \
 		--disable-kmods \
+		--disable-dbus \
 		${myconf} \
 		|| die "configure failed"
 }
@@ -142,23 +187,24 @@ src_compile() {
 
 	# Force kBuild to respect C[XX]FLAGS and MAKEOPTS (bug #178529)
 	# and strip all flags
-	strip-flags
+	# strip-flags
 
 	MAKE="kmk" emake \
 		TOOL_GCC3_CC="$(tc-getCC)" TOOL_GCC3_CXX="$(tc-getCXX)" \
 		TOOL_GCC3_AS="$(tc-getCC)" TOOL_GCC3_AR="$(tc-getAR)" \
 		TOOL_GCC3_LD="$(tc-getCXX)" TOOL_GCC3_LD_SYSMOD="$(tc-getLD)" \
 		TOOL_GCC3_CFLAGS="${CFLAGS}" TOOL_GCC3_CXXFLAGS="${CXXFLAGS}" \
+		VBOX_GCC_OPT="${CXXFLAGS}" \
 		TOOL_YASM_AS=yasm KBUILD_PATH="${S}/kBuild" \
 		all || die "kmk failed"
 }
 
 src_install() {
-	cd "${S}"/out/linux.*/release/bin || die
+	cd "${S}"/out/linux.${ARCH}/release/bin || die
 
 	# Create configuration files
 	insinto /etc/vbox
-	newins "${FILESDIR}/${PN}-3-config" vbox.cfg
+	newins "${FILESDIR}/${PN}-4-config" vbox.cfg
 
 	# Set the right libdir
 	sed -i \
@@ -167,7 +213,7 @@ src_install() {
 
 	# Symlink binaries to the shipped wrapper
 	exeinto /usr/$(get_libdir)/${PN}
-	newexe "${FILESDIR}/${PN}-3-wrapper" "VBox" || die
+	newexe "${FILESDIR}/${PN}-ose-3-wrapper" "VBox" || die
 	fowners root:vboxusers /usr/$(get_libdir)/${PN}/VBox
 	fperms 0750 /usr/$(get_libdir)/${PN}/VBox
 
@@ -193,13 +239,14 @@ src_install() {
 		newconfd "${FILESDIR}"/vboxwebsrv-confd vboxwebsrv
 	fi
 
-	for each in VBox{Manage,SVC,XPCOMIPCD,Tunctl,NetAdpCtl,NetDHCP} *so *r0 *gc ; do
+	for each in VBox{Manage,SVC,XPCOMIPCD,Tunctl,NetAdpCtl,NetDHCP,ExtPackHelperApp} *so *r0 *gc ; do
 		doins $each || die
 		fowners root:vboxusers /usr/$(get_libdir)/${PN}/${each}
 		fperms 0750 /usr/$(get_libdir)/${PN}/${each}
 	done
-	# VBoxNetAdpCtl binary needs to be suid root in any case..
+	# VBoxNetAdpCtl and VBoxNetDHCP binaries need to be suid root in any case..
 	fperms 4750 /usr/$(get_libdir)/${PN}/VBoxNetAdpCtl
+	fperms 4750 /usr/$(get_libdir)/${PN}/VBoxNetDHCP
 
 	if ! use headless ; then
 		for each in VBox{SDL,Headless} ; do
@@ -209,7 +256,7 @@ src_install() {
 			pax-mark -m "${D}"/usr/$(get_libdir)/${PN}/${each}
 		done
 
-		if use opengl ; then
+		if use opengl && use qt4 ; then
 			doins VBoxTestOGL || die
 			fowners root:vboxusers /usr/$(get_libdir)/${PN}/VBoxTestOGL
 			fperms 0750 /usr/$(get_libdir)/${PN}/VBoxTestOGL
@@ -224,10 +271,11 @@ src_install() {
 			pax-mark -m "${D}"/usr/$(get_libdir)/${PN}/VirtualBox
 
 			dosym /usr/$(get_libdir)/${PN}/VBox /usr/bin/VirtualBox
+
+			newmenu "${FILESDIR}"/${PN}-ose.desktop-2 ${PN}.desktop
 		fi
 
 		newicon	"${S}"/src/VBox/Frontends/VirtualBox/images/OSE/VirtualBox_32px.png ${PN}.png
-		domenu "${FILESDIR}"/${PN}.desktop
 	else
 		doins VBoxHeadless || die
 		fowners root:vboxusers /usr/$(get_libdir)/${PN}/VBoxHeadless
@@ -235,10 +283,21 @@ src_install() {
 		pax-mark -m "${D}"/usr/$(get_libdir)/${PN}/VBoxHeadless
 	fi
 
+	# Install EFI Firmware files (bug #320757)
+	pushd "${S}"/src/VBox/Devices/EFI/FirmwareBin &>/dev/null || die
+	for fwfile in VBoxEFI{32,64}.fd ; do
+		doins ${fwfile} || die
+		fowners root:vboxusers /usr/$(get_libdir)/${PN}/${fwfile} || die
+	done
+	popd &>/dev/null || die
+
 	insinto /usr/share/${PN}
 	if ! use headless && use qt4 ; then
 		doins -r nls
 	fi
+
+	# VRDPAuth only works with this (bug #351949)
+	dosym VBoxAuth.so  /usr/$(get_libdir)/${PN}/VRDPAuth.so
 
 	# set an env-variable for 3rd party tools
 	echo -n "VBOX_APP_HOME=/usr/$(get_libdir)/${PN}" > "${T}/90virtualbox"
@@ -257,6 +316,15 @@ pkg_postinst() {
 	elog ""
 	elog "For advanced networking setups you should emerge:"
 	elog "net-misc/bridge-utils and sys-apps/usermode-utilities"
+	elog ""
+	elog "IMPORTANT!"
+	elog "If you upgrade from app-emulation/virtualbox-ose make sure to run"
+	elog "\"env-update\" as root and logout and relogin as the user you wish"
+	elog "to run ${PN} as."
+	elog ""
+	elog "Starting with version 4.0.0, ${PN} has USB-1 support."
+	elog "For USB-2 support, PXE-boot ability and VRDP support please"
+	elog "emerge app-emulation/virtualbox-extpack-oracle package."
 }
 
 pkg_postrm() {
