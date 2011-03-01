@@ -19,7 +19,7 @@ KEYWORDS="amd64 x86"
 IUSE=""
 
 DEPEND="dev-vcs/cvs
-	dev-util/subversion
+	dev-vcs/subversion
 	sys-devel/gettext"
 RDEPEND=""
 
