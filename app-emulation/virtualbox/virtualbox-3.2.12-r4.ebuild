@@ -125,7 +125,7 @@ src_prepare() {
 	epatch "${FILESDIR}/${PN}-ose-vnc.patch"
 
 	# 32bit userland
-	epatch "${FILESDIR}/${PN}-3.1.2-32bit-userland.patch"
+	epatch "${FILESDIR}/${PN}-ose-3.1.2-32bit-userland.patch"
 }
 
 src_configure() {
