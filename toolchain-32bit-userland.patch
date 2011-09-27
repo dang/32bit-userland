@@ -1,17 +1,11 @@
 Index: toolchain.eclass
 ===================================================================
 RCS file: /var/cvsroot/gentoo-x86/eclass/toolchain.eclass,v
-retrieving revision 1.467
-diff -u -p -r1.467 toolchain.eclass
---- toolchain.eclass	12 Sep 2011 05:40:23 -0000	1.467
-+++ toolchain.eclass	12 Sep 2011 15:19:31 -0000
-@@ -1,4 +1,4 @@
--# Copyright 1999-2008 Gentoo Foundation
-+# Copyright 1999-2010 Gentoo Foundation
- # Distributed under the terms of the GNU General Public License v2
- # $Header: /var/cvsroot/gentoo-x86/eclass/toolchain.eclass,v 1.467 2011/09/12 05:40:23 vapier Exp $
- #
-@@ -1218,7 +1218,11 @@ gcc-compiler-configure() {
+retrieving revision 1.472
+diff -u -p -r1.472 toolchain.eclass
+--- toolchain.eclass	27 Sep 2011 12:14:25 -0000	1.472
++++ toolchain.eclass	27 Sep 2011 16:22:00 -0000
+@@ -1183,7 +1183,11 @@ gcc-compiler-configure() {
  		# Default arch for x86 is normally i386, lets give it a bump
  		# since glibc will do so based on CTARGET anyways
  		x86)
@@ -24,7 +18,7 @@ diff -u -p -r1.467 toolchain.eclass
  			;;
  		# Enable sjlj exceptions for backward compatibility on hppa
  		hppa)
-@@ -1425,15 +1429,15 @@ gcc_do_configure() {
+@@ -1388,15 +1392,15 @@ gcc_do_configure() {
  	esac
  	[[ ${GCCMAJOR}.${GCCMINOR} < 3.4 ]] && confgcc+=" --disable-libunwind-exceptions"
  
