@@ -1,11 +1,11 @@
 Index: toolchain.eclass
 ===================================================================
 RCS file: /var/cvsroot/gentoo-x86/eclass/toolchain.eclass,v
-retrieving revision 1.472
-diff -u -p -r1.472 toolchain.eclass
---- toolchain.eclass	27 Sep 2011 12:14:25 -0000	1.472
-+++ toolchain.eclass	27 Sep 2011 16:22:00 -0000
-@@ -1183,7 +1183,11 @@ gcc-compiler-configure() {
+retrieving revision 1.510
+diff -u -p -r1.510 toolchain.eclass
+--- toolchain.eclass	10 Dec 2011 08:55:37 -0000	1.510
++++ toolchain.eclass	12 Dec 2011 00:41:41 -0000
+@@ -979,7 +979,11 @@ gcc-compiler-configure() {
  		# Default arch for x86 is normally i386, lets give it a bump
  		# since glibc will do so based on CTARGET anyways
  		x86)
@@ -18,26 +18,3 @@ diff -u -p -r1.472 toolchain.eclass
  			;;
  		# Enable sjlj exceptions for backward compatibility on hppa
  		hppa)
-@@ -1388,15 +1392,15 @@ gcc_do_configure() {
- 	esac
- 	[[ ${GCCMAJOR}.${GCCMINOR} < 3.4 ]] && confgcc+=" --disable-libunwind-exceptions"
- 
--	# create a sparc*linux*-{gcc,g++} that can handle -m32 and -m64 (biarch)
--	if [[ ${CTARGET} == sparc*linux* ]] \
--		&& is_multilib \
--		&& ! is_crosscompile \
--		&& [[ ${GCCMAJOR}.${GCCMINOR} > 4.2 ]]
--	then
--		confgcc+=" --enable-targets=all"
-+	if [[ ${CTARGET} == *linux* ]] && is_multilib && ! is_crosscompile &&
-+		[[ ${GCCMAJOR}.${GCCMINOR} > 4.2 ]] ; then
-+			case $(tc-arch) in
-+				sparc|x86) confgcc+=" --enable-targets=all"
-+				;;
-+			esac
- 	fi
- 
-+
- 	tc_version_is_at_least 4.3 && set -- "$@" \
- 		--with-bugurl=http://bugs.gentoo.org/ \
- 		--with-pkgversion="${BRANDING_GCC_PKGVERSION}"
